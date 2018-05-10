@@ -4,7 +4,7 @@ import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import moment from 'moment';
-import EditEventButton from './EditEventButton';
+import UpdateEventButton from './UpdateEventButton';
 import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
 
@@ -40,6 +40,7 @@ const styles = theme => ({
     }
 });
 
+// Render the event details, the data will be fetched only when the 'Expand' button of parent is clicked
 const ItemDetails = (props) => {
 
     const calendarFomrat = (date) => moment(date).calendar();
@@ -58,7 +59,10 @@ const ItemDetails = (props) => {
         <Grid container spacing={24} alignItems='stretch'>
             <Grid className={classes.info} item={true} xs={12} sm={12} zeroMinWidth={true} >
                 <div className={`${classes.toolBar}`}>
-                    <EditEventButton initialValues={initialValues} />
+
+                    {/* Pass the event details to the form for further editing  */}
+                    <UpdateEventButton initialValues={initialValues} />
+                    
                     <a target="_blank" href={details.htmlLink} style={{ textDecoration: 'none' }}>
                         <Button color="secondary" variant="fab" className={classes.button} component="span">
                             <Icon>calendar_today</Icon>

@@ -5,7 +5,8 @@ import Icon from 'material-ui/Icon';
 import Typography from 'material-ui/Typography';
 import Modal from 'material-ui/Modal';
 
-function getModalStyle() {
+// function to return modal style
+const getModalStyle = () => {
     const top = 50;
     const left = 50;
 
@@ -35,6 +36,7 @@ const styles = theme => ({
     },
 });
 
+// Reusable component to render button that can pop up a modal form when clicked.
 class ModalFormButton extends React.Component {
     state = {
         open: false,

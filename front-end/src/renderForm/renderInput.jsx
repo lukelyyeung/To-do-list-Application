@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import DateTimePicker from './DateTimePicker';
 
+// Render the input field for the redux form
 export const renderTextField = ({
     input,
     label,
@@ -16,6 +17,7 @@ export const renderTextField = ({
                 {...custom}
                 error={Boolean(touched && error)}
             />
+            {/* Error prompt statment when the input is invalid */}
             {touched &&
                 ((error && <span>{error}</span>) ||
                     (warning && <span>{warning}</span>))}

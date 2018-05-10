@@ -22,7 +22,7 @@ const Styles = theme => ({
 const Loading = ({ classes, isLoading, type, color }) => (
     isLoading ?
         (<div className={classes.loadingContainer}>
-            <ReactLoading type={type} color={color} />
+            <ReactLoading className="react-loading" type={type} color={color} />
         </div>)
         : null
 );

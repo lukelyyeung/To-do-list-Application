@@ -47,6 +47,7 @@ class Navigation extends React.Component {
         this.setState({ anchorEl: null });
     };
 
+    // Call the jwt login function to login if the user carry jwt token
     componentDidMount() {
         this.props.jwtLogin();
     }
@@ -62,6 +63,7 @@ class Navigation extends React.Component {
                     <Typography variant="title" color="inherit" className={classes.flex}>
                         To-Do-List Application
                         </Typography>
+                    {/* Upon authenticated, the login buttion will become an accountCircle menu */}
                     {!isAuthenticated && <AuthButton />}
                     {isAuthenticated && (
                         <div>

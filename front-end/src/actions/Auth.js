@@ -67,6 +67,7 @@ export const jwtLogin = () => {
                     }
                 })
                 .catch(response => {
+                    dispatch(finishLoadingAction());
                     return dispatch(LoginFailureAction(response.message));
                 });
         } catch (err) {

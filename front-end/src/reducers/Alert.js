@@ -6,11 +6,17 @@ import { ALERT_DISMISS } from '../actions/Alert';
 const initialState = { title: '', message: '', isAlert: false };
 
 // reducer for global alert state
+// Current design can only handle single alert at the same time
+// Consider to change to array to store alert, shift the array when attaining maximum?
+
 export default function AlertReducer(state = initialState, action) {
     switch (action.type) {
+
+        // Dismiss the alert
         case ALERT_DISMISS: {
             return { title: '', message: '', isAlert: false }
         }
+        // Turn on the alert
         case POST_ITEM_SUCCESS:
         case PATCH_ITEM_SUCCESS:
         case DELETE_ITEM_SUCCESS:

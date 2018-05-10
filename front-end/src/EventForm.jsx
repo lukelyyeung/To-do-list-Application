@@ -29,8 +29,10 @@ const SubmitButton = ({ onClick, ...others }) => (
     </Button>
 );
 
+// Event form to be reused for post and update event
 const EventForm = props => {
     const { handleSubmit, invalid, classes, handleClose, pristine, reset, submitting, dispatch, actionType } = props;
+    // Close the modal after the submission is done
     const triggerSubmit = () => {
         return (() => new Promise((resolve, reject) => {
             dispatch(submit('eventForm'));
@@ -40,7 +42,7 @@ const EventForm = props => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="event-form">
             <div className={classes.fieldContainer}>
                 <Field
                     className={classes.field}
@@ -79,11 +81,13 @@ const EventForm = props => {
                     label="Reminder"
                 />
             </div>
+            {/* render confirm box when submitting, disable props will be added to the output component */}
             <div>
                 <ConfirmBox
                     onConfirmHandler={() => triggerSubmit()}
                     title={`${actionType} this event?`}
                     text="Make sure the details are correct!"
+                    // The submission button is disable when the input is invalid
                     disabled={pristine || submitting || invalid}
                     className={classes.button}
                     component={SubmitButton}

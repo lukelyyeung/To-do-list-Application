@@ -29,13 +29,16 @@ const validate = values => {
             errors[field] = 'Required'
         }
     })
+
+    // Give error when the start time or / and due time is before the current time.
     if (values.start && (isValidDate(values.start) || isPassed(values.start))) {
         errors.start = 'Invalid start date'
     }
     if (values.end && (isValidDate(values.end) || isPassed(values.end))) {
         errors.end = 'Invalid due date'
     }
-    
+
+    // Give error when the start time is after the due time
     if (values.start && values.end && isTimeTraveller(values.start, values.end)) {
         errors.start = 'Time traveller?';
         errors.end = 'Time traveller?';

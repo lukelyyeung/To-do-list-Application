@@ -20,7 +20,7 @@ let AddEventButton = ({ classes, onClick }) => (
         variant="fab"
         color="primary"
         aria-label="add"
-        className={classes.floatButton}
+        className={`${classes.floatButton} add-button`}
         onClick={onClick}
     >
         <AddIcon />

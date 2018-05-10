@@ -7,7 +7,7 @@ import EventForm from './containers/UpdateEventForm';
 import orange from 'material-ui/colors/orange';
 
 const styles = (theme) => ({
-    editButton: {
+    updateButton: {
         backgroundColor: orange[400],
         color: '#fff',
         marginLeft: theme.spacing.unit, 
@@ -17,23 +17,24 @@ const styles = (theme) => ({
     }
 });
 
-let EditEventButton = ({ classes, onClick }) => (
+// Connect custom button with the update event form 
+let UpdateEventButton = ({ classes, onClick }) => (
     <Button
         variant="fab"
-        className={classes.editButton}
+        className={`${classes.updateButton} update-button`}
         aria-label="add"
         onClick={onClick}
     >
         <Icon>edit_icon</Icon>
     </Button>);
 
-EditEventButton = withStyles(styles)(EditEventButton);
+UpdateEventButton = withStyles(styles)(UpdateEventButton);
 
 export default ({initialValues}) => (
     <ModalFormButton 
         initialValues={initialValues}
         actionType="Update"
-        outputButton={EditEventButton}
+        outputButton={UpdateEventButton}
         outputForm={EventForm}
         title="Update this event?"
     />);

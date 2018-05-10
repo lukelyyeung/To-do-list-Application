@@ -15,6 +15,7 @@ const styles = theme => ({
   },
 });
 
+// Material-UI-Next dateTimePicker
 const DateAndTimePickers = (props) => {
   const { classes, label, input, meta: { error, touched, warning }, custom } = props;
   return (
@@ -29,6 +30,7 @@ const DateAndTimePickers = (props) => {
         {...input}
         {...custom}
       />
+      {/* Error prompt statment when the input is invalid */}
       {touched &&
         ((error && <span>{error}</span>) ||
           (warning && <span>{warning}</span>))}

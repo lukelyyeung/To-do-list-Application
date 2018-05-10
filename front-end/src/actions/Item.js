@@ -2,12 +2,13 @@ import axios from 'axios';
 import { getItemsFailure } from './Items';
 import { loadingAction, finishLoadingAction } from './Loading';
 
+// Actions
 export const POST_ITEM_SUCCESS = 'POST_ITEM_SUCCESS';
 export const PATCH_ITEM_SUCCESS = 'PATCH_ITEM_SUCCESS';
 export const DELETE_ITEM_SUCCESS = 'DELETE_ITEM_SUCCESS';
 export const MANIPULATE_ITEM_FAILURE = 'MANIPULATE_ITEM_FAILURE';
 
-// Actions
+// Actions creators
 const postItemSuccess = (items) => ({
     type: POST_ITEM_SUCCESS,
     message: 'Create event successfully',

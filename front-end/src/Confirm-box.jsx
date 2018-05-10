@@ -12,6 +12,7 @@ function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
+// Reuseable confirm alert box for event operation
 class ConfirmBox extends React.Component {
     state = {
         isOpen: false
