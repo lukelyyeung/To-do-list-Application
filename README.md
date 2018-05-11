@@ -10,7 +10,7 @@
 GOOGLE_CALENDAR_CLIENT_ID=your_google_calendar_Id
 GOOGLE_CALENDAR_CLIENT_SECRET=your_google_calendar_client_secret
 ```
-Also put the client id into /back
+Also put the client id into /front-end/.env
 ```
 REACT_APP_GOOGLE_CLIENT_ID=your_google_calendar_Id
 ```
