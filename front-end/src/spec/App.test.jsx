@@ -3,8 +3,6 @@ import { store } from '../store';
 import App from '../App';
 import Navigation from '../Navigation';
 import AuthButton from '../containers/AuthButton';
-import Item from '../Item';
-import Items from '../containers/Items';
 import PostEventForm from '../containers/PostEventForm';
 import EventForm from '../EventForm';
 import ModalFormButton from '../ModalFormButton';
@@ -43,8 +41,14 @@ describe('<App />', () => {
         const wrapper = mount(<App />);
         expect(wrapper.find(AuthButton).length).toEqual(1);
     });
-    it('renders a addEvent button', () => {
+    it('renders a add event button', () => {
         const wrapper = mount(<App />);
         expect(wrapper.find(AddEventButton).length).toEqual(1);
+    });
+    it('pop up a event form when clicked the add event button', () => {
+        const wrapper = mount(<App />);
+        // console.log(wrapper.find(AddEventButton).find('button').text());
+        // wrapper.find(AddEventButton).find('button').simulate('click');
+        // expect(wrapper.find('body div .event-form').length).toEqual(1);
     });
 });
