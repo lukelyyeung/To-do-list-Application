@@ -10,7 +10,12 @@
 GOOGLE_CALENDAR_CLIENT_ID=your_google_calendar_Id
 GOOGLE_CALENDAR_CLIENT_SECRET=your_google_calendar_client_secret
 ```
-4. Run ```./serve``` or ```cd back-end && npm start & cd front-end && yarn start```to start server. Back-end will be ran at port 8080 while front-end will be at port   3000.
+Also put the client id into /back
+```
+REACT_APP_GOOGLE_CLIENT_ID=your_google_calendar_Id
+```
+
+4. Run ```./serve.sh``` or ```cd back-end && npm start & cd front-end && yarn start``` to start server. Back-end will be ran at port 8080 while front-end will be at    port 3000.
 
 ### Testing ###
 1. Run ```npm test``` at root directory of back-end. 28 spec for the unit test of the service.
