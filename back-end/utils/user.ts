@@ -2,6 +2,7 @@ import { promisify } from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Model } from '../module';
+import { USER } from '../constants/USER';
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 const USER_PATH = path.join(__dirname, '../credentials.json');
@@ -15,10 +16,7 @@ export const findUser = (id: string): Promise<Model.IUserInfo | undefined> => re
 
         return;
     })
-    .catch(err => {
-        // console.log(err);
-        throw new Error('Load user file failed');
-    });
+    .catch(() => { throw new Error(USER.LOAD_USER_FILE_FAIL) });
 
 export const addUser = (userInfo: Model.IUserInfo) =>
     readFileAsync(USER_PATH, { encoding: 'utf-8' })
@@ -27,10 +25,7 @@ export const addUser = (userInfo: Model.IUserInfo) =>
             return userArray.concat([userInfo]);
         })
         .then(updatedUsers => writeFileAsync(USER_PATH, JSON.stringify(updatedUsers), { encoding: 'utf8', flag: 'w' }))
-        .catch(err => {
-            // console.log(err);
-            throw new Error('Write user file failed');
-        });
+        .catch(() => { throw new Error(USER.WRITE_USER_FILE_FAIL); });
 
 export const updateUser = (newUserInfo: Model.IUserInfo) => readFileAsync(USER_PATH, { encoding: 'utf-8' })
     .then(Users => {
@@ -42,7 +37,4 @@ export const updateUser = (newUserInfo: Model.IUserInfo) => readFileAsync(USER_P
         });
     })
     .then(updatedUsers => writeFileAsync(USER_PATH, JSON.stringify(updatedUsers), { encoding: 'utf8', flag: 'w' }))
-    .catch(err => {
-        // console.log(err);
-        throw new Error('Update user file failed');
-    });
+    .catch(() => { throw new Error(USER.UPDATE_USER_FILE_FAIL) });

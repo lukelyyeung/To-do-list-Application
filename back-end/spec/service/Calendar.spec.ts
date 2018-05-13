@@ -2,11 +2,8 @@
 import "jasmine";
 import { CalendarService } from '../../service/CalenderService';
 import { Service } from "../../module";
-// import { Service, Model } from "../../module";
-// import * as jwt from "jwt-simple";
-// import { config } from "../../utils/jwt-config";
-// const generateJwt = (userPayload: Model.IUserPayload) => jwt.encode(userPayload, config.privateKey, config.jwtAlgorithm);
-// const verifyJwt = (token: string | undefined) => jwt.decode(token, config.publicKey);
+import { GOOGLE } from "../../constants/GOOGLE_RESPONSE";
+import { CALENDAR } from "../../constants/CALENDAR";
 
 describe("The Calendar functions should be able to", function () {
 
@@ -74,7 +71,6 @@ describe("The Calendar functions should be able to", function () {
 
     let
         authorizeCallThorugh: jasmine.Spy,
-        // checkIfExpiredCallThorugh: jasmine.Spy,
         fakeCreateOAuth2Client: jasmine.Spy,
         fakeGetGoogleEventList: jasmine.Spy,
         fakeGetGoogleEvent: jasmine.Spy,
@@ -92,7 +88,6 @@ describe("The Calendar functions should be able to", function () {
     beforeEach(function () {
         fakedOAuth2Client = jasmine.createSpyObj('oAuth2Client', ['setCredentials', 'refreshAccessToken']);
         Calendar = new CalendarService(fakeGoogleCalendarObject);
-        // checkIfExpiredCallThorugh = spyOn<any>(Calendar, 'checkIfExpired').and.callThrough();
         authorizeCallThorugh = spyOn<any>(Calendar, 'authorize').and.callThrough();
         fakeCreateOAuth2Client = spyOn<any>(Calendar, 'createOAuth2Client').and.returnValue(fakedOAuth2Client);
         fakeGetGoogleEventList = spyOn<any>(Calendar, 'getGoogleEventList').and.returnValue(new Promise((res) => res({ data: { items: eventList } })));
@@ -110,7 +105,7 @@ describe("The Calendar functions should be able to", function () {
                 expect(fakeCreateOAuth2Client).toHaveBeenCalled();
                 expect(fakedOAuth2Client.setCredentials).toHaveBeenCalledWith(userCredential);
                 expect(fakeGetGoogleEventList).toHaveBeenCalled();
-                expect(response.status).toBe('Get event list successfully');
+                expect(response.status).toBe(CALENDAR.GET_EVENT_LIST_SUCCESS);
                 expect(response.events).toEqual(eventList);
                 expect(response.token).toBeUndefined();
             })
@@ -123,7 +118,7 @@ describe("The Calendar functions should be able to", function () {
             .then(() => {
                 throw new Error('Promise should not resolve here')
             })
-            .catch(err => expect(() => { throw err }).toThrow(new Error('Get calendar list failure')))
+            .catch(err => expect(() => { throw err }).toThrow(new Error(CALENDAR.GET_EVENT_LIST_FAIL)))
             .then(() => done());
     });
 
@@ -134,7 +129,7 @@ describe("The Calendar functions should be able to", function () {
                 expect(fakeCreateOAuth2Client).toHaveBeenCalled();
                 expect(fakedOAuth2Client.setCredentials).toHaveBeenCalledWith(userCredential);
                 expect(fakeGetGoogleEvent).toHaveBeenCalled();
-                expect(response.status).toBe('Get event successfully');
+                expect(response.status).toBe(CALENDAR.GET_EVENT_SUCCESS);
                 expect(response.event).toEqual(event);
                 expect(response.token).toBeUndefined();
             })
@@ -148,7 +143,7 @@ describe("The Calendar functions should be able to", function () {
             .then(() => {
                 throw new Error('Promise should not resolve here')
             })
-            .catch(err => expect(() => { throw err }).toThrow(new Error('Get event failure')))
+            .catch(err => expect(() => { throw err }).toThrow(new Error(CALENDAR.GET_EVENT_FAIL)))
             .then(() => done());
     });
 
@@ -159,7 +154,7 @@ describe("The Calendar functions should be able to", function () {
                 expect(fakeCreateOAuth2Client).toHaveBeenCalled();
                 expect(fakedOAuth2Client.setCredentials).toHaveBeenCalledWith(userCredential);
                 expect(fakeCreateGoogleEvent).toHaveBeenCalled();
-                expect(response.status).toBe('Create event successfully');
+                expect(response.status).toBe(CALENDAR.CREATE_EVENT_SUCCESS);
                 expect(response.token).toBeUndefined();
             })
             .then(() => done());
@@ -172,7 +167,7 @@ describe("The Calendar functions should be able to", function () {
             .then(() => {
                 throw new Error('Promise should not resolve here')
             })
-            .catch(err => expect(() => { throw err }).toThrow(new Error('Create event failure')))
+            .catch(err => expect(() => { throw err }).toThrow(new Error(CALENDAR.CREATE_EVENT_FAIL)))
             .then(() => done());
     });
 
@@ -183,7 +178,7 @@ describe("The Calendar functions should be able to", function () {
                 expect(fakeCreateOAuth2Client).toHaveBeenCalled();
                 expect(fakedOAuth2Client.setCredentials).toHaveBeenCalledWith(userCredential);
                 expect(fakeRemoveGoogleEvent).toHaveBeenCalled();
-                expect(response.status).toBe('Remove event successfully');
+                expect(response.status).toBe(CALENDAR.REMOVE_EVENT_SUCCESS);
                 expect(response.token).toBeUndefined();
             })
             .then(() => done());
@@ -195,7 +190,7 @@ describe("The Calendar functions should be able to", function () {
             .then(() => {
                 throw new Error('Promise should not resolve here')
             })
-            .catch(err => expect(() => { throw err }).toThrow(new Error('Remove event failure')))
+            .catch(err => expect(() => { throw err }).toThrow(new Error(CALENDAR.REMOVE_EVENT_FAIL)))
             .then(() => done());
     });
 
@@ -206,7 +201,7 @@ describe("The Calendar functions should be able to", function () {
                 expect(fakeCreateOAuth2Client).toHaveBeenCalled();
                 expect(fakedOAuth2Client.setCredentials).toHaveBeenCalledWith(userCredential);
                 expect(fakeUpdateGoogleEvent).toHaveBeenCalled();
-                expect(response.status).toBe('Update event successfully');
+                expect(response.status).toBe(CALENDAR.UPDATE_EVENT_SUCCESS);
                 expect(response.token).toBeUndefined();
             })
             .then(() => done());
@@ -218,7 +213,7 @@ describe("The Calendar functions should be able to", function () {
             .then(() => {
                 throw new Error('Promise should not resolve here')
             })
-            .catch(err => expect(() => { throw err }).toThrow(new Error('Update event failure')))
+            .catch(err => expect(() => { throw err }).toThrow(new Error(CALENDAR.UPDATE_EVENT_FAIL)))
             .then(() => done());
     });
 
@@ -230,19 +225,19 @@ describe("The Calendar functions should be able to", function () {
                 expect(fakeGetRefreshToken).toHaveBeenCalled();
                 expect(fakedOAuth2Client.setCredentials).toHaveBeenCalledWith(userCredential);
                 expect(fakeUpdateGoogleEvent).toHaveBeenCalled();
-                expect(response.status).toBe('Update event successfully');
+                expect(response.status).toBe(CALENDAR.UPDATE_EVENT_SUCCESS);
                 expect(response.token).not.toBeUndefined();
             })
             .then(() => done());
     });
 
     it("throw error when cannot refresh the access token.", function (done) {
-        fakeGetRefreshToken.and.returnValue(new Promise((res, rej) => rej(new Error('Refresh access token failure'))));
+        fakeGetRefreshToken.and.returnValue(new Promise((res, rej) => rej(new Error(GOOGLE.REFRESH_ACCESS_TOKEN_FAIL))));
         Calendar.updateEvent({ user: expiredUserObject, params: paramsObject, body: event })
             .then(() => {
                 throw new Error('Promise should not resolve here')
             })
-            .catch(err => expect(() => { throw err }).toThrow(new Error('Refresh access token failure')))
+            .catch(err => expect(() => { throw err }).toThrow(new Error(GOOGLE.REFRESH_ACCESS_TOKEN_FAIL)))
             .then(() => done());
     });
 

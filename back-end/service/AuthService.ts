@@ -5,6 +5,8 @@ import { config } from '../utils/jwt-config';
 import { addUser, findUser, updateUser } from '../utils/user';
 import { Credentials } from 'google-auth-library/build/src/auth/credentials';
 import { Model, Status, Express } from '../module';
+import { GOOGLE } from '../constants/GOOGLE_RESPONSE';
+import { AUTH } from '../constants/AUTH';
 const { google } = googleapis;
 const OAuth2Client = google.auth.OAuth2;
 const verifyLink = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=';
@@ -21,7 +23,7 @@ export class AuthService {
             .then(response => response.tokens)
             .catch(err => {
                 console.log(err);
-                throw new Error('Get access token failure');
+                throw new Error(GOOGLE.GET_ACCESS_TOKEN_FAIL);
             });
     }
 
@@ -31,7 +33,7 @@ export class AuthService {
             .then(response => response.data)
             .catch(err => {
                 console.log(err);
-                throw new Error('Get user id failure');
+                throw new Error(GOOGLE.GET_USER_ID_FAIL);
             });
     }
 
@@ -43,7 +45,7 @@ export class AuthService {
         return oAuth2Client.refreshAccessToken()
             .then(response => response.credentials)
             .catch(err => {
-                throw new Error('Refresh access token failure');
+                throw new Error(GOOGLE.REFRESH_ACCESS_TOKEN_FAIL);
             });
     }
 
@@ -67,7 +69,7 @@ export class AuthService {
             const tokens = await this.getAccessToken(code);
 
             if (!tokens || !tokens.access_token || !tokens.expiry_date || !tokens.refresh_token) {
-                throw new Error('Get access token failure');
+                throw new Error(GOOGLE.GET_ACCESS_TOKEN_FAIL);
             }
 
             const { access_token, expiry_date, refresh_token } = tokens;
@@ -77,7 +79,7 @@ export class AuthService {
             const user = await this.getUserInfo(access_token);
 
             if (!user || !user.id) {
-                throw new Error('Get user id failure');
+                throw new Error(GOOGLE.GET_USER_ID_FAIL);
             }
 
             const userinfo: Model.IUserInfo = {
@@ -102,19 +104,19 @@ export class AuthService {
             }
 
             return {
-                status: 'Login success',
+                status: AUTH.LOGIN_SUCCESS,
                 token: jwt.encode(payload, config.privateKey, config.jwtAlgorithm)
             }
 
         } catch (err) {
             switch (err.message) {
-                case 'Get user id failure':
-                case 'Refresh access token failure':
-                case 'Get access token failure':
+                case GOOGLE.GET_USER_ID_FAIL:
+                case GOOGLE.GET_ACCESS_TOKEN_FAIL:
+                case GOOGLE.REFRESH_ACCESS_TOKEN_FAIL:
                     throw new Error(err.message);
                 default: {
                     console.log(err);
-                    throw new Error('Login failure');
+                    throw new Error(AUTH.LOGIN_FAIL);
                 }
             }
         }
@@ -130,11 +132,11 @@ export class AuthService {
             let newToken: undefined | string;
 
             if (!user) {
-                throw new Error('Cannot find user');
+                throw new Error(AUTH.NO_USER);
             }
 
             if (payload.expiry < user.expiry) {
-                throw new Error('Invalid Jwt token');
+                throw new Error(AUTH.INVALID_JWT);
             }
 
             if (payload.expiry <= Date.now() / 1000 && payload.expiry === user.expiry) {
@@ -147,7 +149,7 @@ export class AuthService {
                 });
 
                 if (!newTokens || !newTokens.access_token || !newTokens.expiry_date) {
-                    throw new Error('Refresh access token failure');
+                    throw new Error(GOOGLE.REFRESH_ACCESS_TOKEN_FAIL);
                 }
 
 
@@ -171,18 +173,18 @@ export class AuthService {
 
             // New token will be delivered with the response if jwt are valid but expired.
             return {
-                status: 'Login success',
+                status: AUTH.LOGIN_SUCCESS,
                 token: newToken
             }
         } catch (err) {
             switch (err.message) {
-                case 'Invalid Jwt token':
-                case 'Cannot find user':
-                case 'Refresh access token failure':
+                case AUTH.INVALID_JWT:
+                case AUTH.NO_USER:
+                case GOOGLE.REFRESH_ACCESS_TOKEN_FAIL:
                     throw new Error(err.message);
                 default: {
                     console.log(err);
-                    throw new Error('Login Failure');
+                    throw new Error(AUTH.LOGIN_FAIL);
                 }
             }
         }

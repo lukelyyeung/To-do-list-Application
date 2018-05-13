@@ -6,6 +6,8 @@ import { config } from '../utils/jwt-config';
 import { Express } from '../module';
 import { OAuth2Client as IOAuth2Client } from "google-auth-library";
 import { Credentials } from "google-auth-library/build/src/auth/credentials";
+import { CALENDAR } from "../constants/CALENDAR";
+import { GOOGLE } from "../constants/GOOGLE_RESPONSE";
 const { google } = googleapis;
 const OAuth2Client = google.auth.OAuth2;
 
@@ -63,7 +65,7 @@ export class CalendarService {
         return oAuth2Client.refreshAccessToken()
             .then(response => response.credentials)
             .catch(err => {
-                throw new Error('Refresh access token failure');
+                throw new Error(GOOGLE.REFRESH_ACCESS_TOKEN_FAIL);
             });
     }
 
@@ -72,7 +74,7 @@ export class CalendarService {
         if (expiry < Date.now() / 1000) {
             let { access_token, refresh_token, expiry_date } = await this.refreshAccessToken(oAuth2Client);
             if (!access_token || !refresh_token || !expiry_date) {
-                throw new Error('Refresh access token failure')
+                throw new Error(GOOGLE.REFRESH_ACCESS_TOKEN_FAIL)
             }
             return { access_token, refresh_token, expiry_date };
         }
@@ -103,13 +105,13 @@ export class CalendarService {
                     return { id, start, end, summary, description, reminders };
                 })
                 return {
-                    status: 'Get event list successfully',
+                    status: CALENDAR.GET_EVENT_LIST_SUCCESS,
                     token: token,
                     events
                 }
             })
             .catch((err: any) => {
-                throw new Error('Get calendar list failure')
+                throw new Error(CALENDAR.GET_EVENT_LIST_FAIL);
             })
     }
 
@@ -120,10 +122,10 @@ export class CalendarService {
 
         return this.createGoogleEvent(calendar, { calendarId: calendarId || 'primary', resource: req.body.resource })
             .then((response: any) => {
-                return { status: 'Create event successfully', token }
+                return { status: CALENDAR.CREATE_EVENT_SUCCESS, token }
             })
             .catch((err: any) => {
-                throw new Error('Create event failure')
+                throw new Error(CALENDAR.CREATE_EVENT_FAIL);
             });
     }
 
@@ -133,9 +135,9 @@ export class CalendarService {
         const calendar = google.calendar({ version: 'v3', auth });
 
         return this.removeGoogleEvent(calendar, { calendarId, eventId })
-            .then(() => ({ status: 'Remove event successfully', token }))
+            .then(() => ({ status: CALENDAR.REMOVE_EVENT_SUCCESS, token }))
             .catch((err: any) => {
-                throw new Error('Remove event failure')
+                throw new Error(CALENDAR.REMOVE_EVENT_FAIL)
             });
     }
 
@@ -144,9 +146,9 @@ export class CalendarService {
         const { calendarId, eventId } = req.params;
         const calendar = google.calendar({ version: 'v3', auth });
         return this.getGoogleEvent(calendar, { calendarId, eventId })
-            .then(({ data }: any) => ({ status: 'Get event successfully', token, event: data }))
+            .then(({ data }: any) => ({ status: CALENDAR.GET_EVENT_SUCCESS, token, event: data }))
             .catch((err: any) => {
-                throw new Error('Get event failure')
+                throw new Error(CALENDAR.GET_EVENT_FAIL)
             })
     }
 
@@ -156,9 +158,9 @@ export class CalendarService {
 
         const calendar = google.calendar({ version: 'v3', auth });
         return this.updateGoogleEvent(calendar, { calendarId, eventId, resource: req.body.resource })
-            .then(() => ({ status: 'Update event successfully', token }))
+            .then(() => ({ status: CALENDAR.UPDATE_EVENT_SUCCESS, token }))
             .catch((err: any) => {
-                throw new Error('Update event failure')
+                throw new Error(CALENDAR.UPDATE_EVENT_FAIL)
             });
     }
 }

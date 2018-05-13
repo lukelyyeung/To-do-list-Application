@@ -4,6 +4,9 @@ import { AuthService } from '../../service/AuthService';
 import { Service, Model } from "../../module";
 import * as jwt from "jwt-simple";
 import { config } from "../../utils/jwt-config";
+import { GOOGLE } from '../../constants/GOOGLE_RESPONSE';
+import { AUTH } from '../../constants/AUTH';
+
 const generateJwt = (userPayload: Model.IUserPayload) => jwt.encode(userPayload, config.privateKey, config.jwtAlgorithm);
 const verifyJwt = (token: string | undefined) => jwt.decode(token, config.publicKey);
 
@@ -93,7 +96,7 @@ describe("The auth functions should be able to", function () {
                 expect(fakeGetRefreshToken).not.toHaveBeenCalled();
                 expect(fakeFindUser).toHaveBeenCalledWith(googleResponse.id);
                 expect(fakeAddUser).toHaveBeenCalledWith(userInfo);
-                expect(status.status).toEqual("Login success");
+                expect(status.status).toEqual(AUTH.LOGIN_SUCCESS);
                 expect(verifyJwt(status.token)).toEqual(userPayload);
             })
             .then(() => done());
@@ -104,7 +107,7 @@ describe("The auth functions should be able to", function () {
         fakeGetAccessToken = fakeGetAccessToken.and.returnValue(undefined);
         Auth.googleLogin(authorizationCode)
         .then(() => { throw new Error('Promise should not be resolved') })
-        .catch((error) => (expect(() => { throw error }).toThrow(new Error('Get access token failure'))))
+        .catch((error) => (expect(() => { throw error }).toThrow(new Error(GOOGLE.GET_ACCESS_TOKEN_FAIL))))
         .then(() => done());
     });
     
@@ -112,15 +115,15 @@ describe("The auth functions should be able to", function () {
         fakeGetUserInfo = fakeGetUserInfo.and.returnValue(undefined);
         Auth.googleLogin(authorizationCode)
         .then(() => { throw new Error('Promise should not be resolved') })
-        .catch((error) => (expect(() => { throw error }).toThrow(new Error('Get user id failure'))))
+        .catch((error) => (expect(() => { throw error }).toThrow(new Error(GOOGLE.GET_USER_ID_FAIL))))
         .then(() => done());
     });
     
-    it("throw 'Login failure' error when there are other error", function (done) {
+    it("throw AUTH.LOGIN_FAIL error when there are other error", function (done) {
         fakeFindUser = fakeFindUser.and.throwError('Error is thrown for testing purpose');
         Auth.googleLogin(authorizationCode)
             .then(() => { throw new Error('Promise should not be resolved') })
-            .catch((error) => (expect(() => { throw error }).toThrow(new Error('Login failure'))))
+            .catch((error) => (expect(() => { throw error }).toThrow(new Error(AUTH.LOGIN_FAIL))))
             .then(() => done());
     });
 
@@ -130,7 +133,7 @@ describe("The auth functions should be able to", function () {
         Auth.jwtLogin({ headers: { authorization: `Bearer ${token}` } })
             .then((status) => {
                 expect(fakeFindUser).toHaveBeenCalledWith(googleResponse.id);
-                expect(status.status).toEqual("Login success");
+                expect(status.status).toEqual(AUTH.LOGIN_SUCCESS);
                 expect(status.token).toBeUndefined();
             })
             .then(() => done())
@@ -141,7 +144,7 @@ describe("The auth functions should be able to", function () {
         fakeFindUser = fakeFindUser.and.returnValue(userInfo);
         Auth.jwtLogin({ headers: { authorization: `Bearer ${token}` } })
             .then(() => { throw new Error('Promise should not be resolved') })
-            .catch(err => expect(() => { throw err }).toThrow(new Error('Invalid Jwt token')))
+            .catch(err => expect(() => { throw err }).toThrow(new Error(AUTH.INVALID_JWT)))
             .then(() => done())
     });
 
@@ -150,7 +153,7 @@ describe("The auth functions should be able to", function () {
         fakeFindUser = fakeFindUser.and.returnValue(undefined);
         Auth.jwtLogin({ headers: { authorization: `Bearer ${token}` } })
             .then(() => { throw new Error('Promise should not be resolved') })
-            .catch(err => expect(() => { throw err }).toThrow(new Error('Cannot find user')))
+            .catch(err => expect(() => { throw err }).toThrow(new Error(AUTH.NO_USER)))
             .then(() => done())
     });
 
@@ -165,7 +168,7 @@ describe("The auth functions should be able to", function () {
                     expiry_date: expiredUserPayload.expiry
                 });
                 expect(fakeUpdateUser).toHaveBeenCalledWith(userInfo);
-                expect(status.status).toEqual("Login success");
+                expect(status.status).toEqual(AUTH.LOGIN_SUCCESS);
                 expect(verifyJwt(status.token)).toEqual(userPayload);
             })
             .then(() => done())
@@ -177,7 +180,7 @@ describe("The auth functions should be able to", function () {
         fakeGetRefreshToken = fakeGetRefreshToken.and.returnValue(undefined)
         Auth.jwtLogin({ headers: { authorization: `Bearer ${token}` } })
         .then(() => { throw new Error('Promise should not be resolved') })
-        .catch(err => (expect(() => { throw err }).toThrow(new Error('Refresh access token failure'))))
+        .catch(err => (expect(() => { throw err }).toThrow(new Error(GOOGLE.REFRESH_ACCESS_TOKEN_FAIL))))
         .then(() => done());
     });
 });
