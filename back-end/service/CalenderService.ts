@@ -101,8 +101,8 @@ export class CalendarService {
         })
             .then((response: any) => {
                 const events = response.data.items.map((item: any) => {
-                    const { id, start, end, summary, description, reminders } = item;
-                    return { id, start, end, summary, description, reminders };
+                    const { id, start, end, summary, description, reminders, updated } = item;
+                    return { id, start, end, summary, description, reminders, updated };
                 })
                 return {
                     status: CALENDAR.GET_EVENT_LIST_SUCCESS,

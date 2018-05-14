@@ -25,7 +25,7 @@ export const addUser = (userInfo: Model.IUserInfo) =>
             return userArray.concat([userInfo]);
         })
         .then(updatedUsers => writeFileAsync(USER_PATH, JSON.stringify(updatedUsers), { encoding: 'utf8', flag: 'w' }))
-        .catch(() => { throw new Error(USER.WRITE_USER_FILE_FAIL); });
+        .catch(() => { throw new Error(USER.WRITE_USER_FILE_FAIL) });
 
 export const updateUser = (newUserInfo: Model.IUserInfo) => readFileAsync(USER_PATH, { encoding: 'utf-8' })
     .then(Users => {

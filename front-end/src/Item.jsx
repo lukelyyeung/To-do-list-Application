@@ -58,7 +58,7 @@ class Item extends React.Component {
         const { item: newItem } = this.props;
         // If the event is updated, ajax call again to fetch updated event details
         if (oldItem.updated !== newItem.updated || oldItem.reminders.useDefault !== newItem.reminders.useDefault) {
-            this.props.getItem(this.props.item.id).then(data => this.setState(...this.state, { itemDetails: data.event }));
+            this.props.getItem(this.props.item.id).then(data => this.setState({ itemDetails: data.event }));
         }
     }
 
@@ -73,19 +73,19 @@ class Item extends React.Component {
         }
         this.props.getItem(id).then(data => this.setState(...this.state, { itemDetails: data.event }));
     }
-    
+
     render() {
-        
+
         function deleteButton(props) { return (<Button {...props} className={classes.margin} variant="fab" mini={true}><DeleteIcon /></Button>) }
         const { item, classes, deleteItem } = this.props;
         const { itemDetails } = this.state;
-        
+
         return (<ExpansionPanel className="item" key={item.id} expanded={this.state.expansionPanelOpen} onChange={() => this.getItem(item.id)}>
             <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon className={classes.toggle} onClick={this.expand} />}>
                 <Grid container spacing={24} alignItems='stretch'>
                     <Grid item={true} xs={12} sm={6} zeroMinWidth={true}>
                         <div className={classes.summary}>
-                        
+
                             {/* Render the confirm box for the delete event button */}
                             <ConfirmBox
                                 component={deleteButton}

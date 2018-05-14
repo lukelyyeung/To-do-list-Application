@@ -115,7 +115,6 @@ export class AuthService {
                 case GOOGLE.REFRESH_ACCESS_TOKEN_FAIL:
                     throw new Error(err.message);
                 default: {
-                    console.log(err);
                     throw new Error(AUTH.LOGIN_FAIL);
                 }
             }

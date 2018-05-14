@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "ts-node node_modules/jasmine/bin/jasmine",
-    "start": "nodemon --watch '**/*.ts' --exec 'ts-node' app.ts"
+    "test": "node_modules/ts-node/dist/bin.js node_modules/jasmine/bin/jasmine",
+    "start": "node_modules/nodemon/bin/nodemon.js --watch '**/*.ts' --exec 'node_modules/ts-node/dist/bin.js' app.ts"
   },
   "author": "Luke LY Yeung",
   "license": "ISC",
@@ -27,10 +27,8 @@
     "express-session": "^1.15.6",
     "googleapis": "^27.0.0",
     "jwt-simple": "^0.5.1",
-    "mkdirp": "^0.5.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "path": "^0.12.7",
     "typescript": "^2.8.3"
   },
   "devDependencies": {
@@ -38,6 +36,7 @@
     "@types/jasmine": "^2.8.7",
     "jasmine": "^3.1.0",
     "jasmine-ts": "^0.2.1",
+    "nodemon": "^1.17.4",
     "ts-node": "^6.0.3"
   }
 }

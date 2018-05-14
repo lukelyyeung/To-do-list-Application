@@ -40,22 +40,26 @@ const styles = (theme) => ({
 
 export const PureAuth = (props) => {
 
+    const { classes, googleLogin, loginFail, logout } = props;
     const responseGoogle = (response) => {
-        props.googleLogin(response.code);
+        if (response.error || !response.code) {
+            loginFail(response.error || 'Please try again');
+        } else {
+            googleLogin(response.code);
+        }
     }
 
-    const logout = () => {
-        props.logout();
+    const googleLogout = () => {
+        logout();
     }
 
-    const { classes } = props;
 
     if (props.isAuthenticated) {
         return (<GoogleLogout
             buttonText="Logout"
             tag="a"
             className={classes.logout}
-            onLogoutSuccess={logout}
+            onLogoutSuccess={googleLogout}
         />);
     }
     return (
@@ -70,6 +74,7 @@ export const PureAuth = (props) => {
             style={styles.login}
             scope={SCOPE}
             onSuccess={responseGoogle}
+            onFailure={loginFail}
         />)
 }
 

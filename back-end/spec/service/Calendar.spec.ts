@@ -64,7 +64,8 @@ describe("The Calendar functions should be able to", function () {
         },
         reminders: {
             userDefault: false
-        }
+        },
+        updated: '1970-01-01T09:00'
     };
 
     const eventList = [event];
